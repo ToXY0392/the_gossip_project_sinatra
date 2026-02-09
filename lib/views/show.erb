@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>THP Gossip News – Potin n°<%= id %></title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+  </head>
+
+  <body class="bg-light">
+    <div class="container py-5" style="max-width: 800px;">
+
+      <header class="mb-4 d-flex justify-content-between align-items-center">
+        <a href="/" class="text-decoration-none text-muted small">
+          ◀️ Retour à THP Gossip News
+        </a>
+        <span class="text-muted small">THP Gossip News – Dossier détaillé</span>
+      </header>
+
+      <h1 class="fw-bold mb-4">📰 Potin n°<%= id %></h1>
+
+      <% if gossip %>
+        <div class="card shadow-sm border-0 mb-4" style="border-radius: 20px;">
+          <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div>
+                <span class="badge bg-info text-dark">Auteur</span>
+                <h5 class="fw-bold mb-0"><%= gossip.author %></h5>
+              </div>
+              <span class="badge bg-secondary">Rumeur non vérifiée</span>
+            </div>
+
+            <hr>
+
+            <p class="mb-0" style="font-size: 1.1rem;">
+              <%= gossip.content %>
+            </p>
+
+          </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-outline-primary" href="/gossips/<%= id %>/edit/">
+            ✏️ Modifier ce potin
+          </a>
+
+          <form action="/gossips/<%= id %>/delete/" method="POST"
+                onsubmit="return confirm('Tu es sûr de vouloir supprimer ce chef-d’œuvre de mauvaise foi ?');">
+            <button class="btn btn-outline-danger">
+              🗑️ Supprimer
+            </button>
+          </form>
+        </div>
+      <% else %>
+        <div class="alert alert-danger">
+          Ce potin n’existe pas (ou il a été effacé pour raisons diplomatiques).
+        </div>
+        <a href="/" class="btn btn-secondary">Retour à THP Gossip News</a>
+      <% end %>
+
+    </div>
+  </body>
+</html>
