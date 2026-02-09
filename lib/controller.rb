@@ -1,60 +1,74 @@
-require 'sinatra/base'
-require 'gossip'
+# controller.rb
+require 'sinatra'
+require 'csv'
+require_relative 'gossip'
 
 class ApplicationController < Sinatra::Base
+  set :root, File.dirname(__FILE__)
 
-  # Page d'accueil : liste tous les gossips
+  # Pour afficher correctement les fichiers ERB
+  set :views, Proc.new { File.join(root, "views") }
+
+  ####################################
+  # 👉 PAGE D’ACCUEIL = LISTE DES POTINS
+  ####################################
   get '/' do
     gossips = Gossip.all
     erb :index, locals: { gossips: gossips }
   end
 
-  # Formulaire de création d'un nouveau gossip
-  get '/gossips/new/' do
+  ####################################
+  # 👉 PAGE NEW POTIN
+  ####################################
+  get '/gossips/new' do
     erb :new_gossip
   end
 
-  # Réception du formulaire et sauvegarde du gossip
-  post '/gossips/new/' do
-    gossip = Gossip.new(
-      params["gossip_author"],
-      params["gossip_content"]
-    )
-    gossip.save
+  ####################################
+  # 👉 TRAITEMENT FORMULAIRE NEW POTIN
+  ####################################
+  post '/gossips/new' do
+    Gossip.new(params[:gossip_author], params[:gossip_content]).save
     redirect '/'
   end
 
-  # Page "show" d'un gossip : /gossips/:id
+  ####################################
+  # 👉 PAGE D’UN POTIN (AVEC OU SANS / FINAL)
+  ####################################
   get '/gossips/:id' do
-    id = params['id'].to_i
+    id = params[:id].to_i
     gossip = Gossip.find(id)
     erb :show, locals: { gossip: gossip, id: id }
   end
 
-  # Formulaire d'édition d'un gossip
-  get '/gossips/:id/edit/' do
-    id = params['id'].to_i
+  # Si quelqu’un met un slash inutile → on redirige proprement
+  get '/gossips/:id/' do
+    redirect "/gossips/#{params[:id]}"
+  end
+
+  ####################################
+  # 👉 PAGE POUR EDITER UN POTIN
+  ####################################
+  get '/gossips/:id/edit' do
+    id = params[:id].to_i
     gossip = Gossip.find(id)
     erb :edit, locals: { gossip: gossip, id: id }
   end
 
-  # Réception du formulaire d'édition et mise à jour en CSV
-  post '/gossips/:id/edit/' do
-    id = params['id'].to_i
-
-    Gossip.update(
-      id,
-      params["gossip_author"],
-      params["gossip_content"]
-    )
-
-    redirect "/gossips/#{id}"
+  ####################################
+  # 👉 TRAITEMENT EDIT
+  ####################################
+  post '/gossips/:id/edit' do
+    Gossip.update(params[:id].to_i, params[:gossip_author], params[:gossip_content])
+    redirect "/gossips/#{params[:id]}"
   end
 
-  # Suppression d'un gossip
-  post '/gossips/:id/delete/' do
-    id = params['id'].to_i
-    Gossip.delete(id)
+  ####################################
+  # 👉 SUPPRESSION D'UN POTIN
+  ####################################
+  post '/gossips/:id/delete' do
+    Gossip.delete(params[:id].to_i)
     redirect '/'
   end
+
 end
