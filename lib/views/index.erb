@@ -1,161 +1,163 @@
 <html>
-  <body style="margin:0; font-family: Arial, sans-serif; background:#f5f5f5;">
+  <head>
+    <meta charset="utf-8" />
+    <title>THP Gossip News</title>
 
-    <!-- HEADER -->
-    <header style="
-      background:#f1f1f1;
-      padding:14px 0 10px 0;
-      text-align:center;
-      box-shadow:0 1px 2px rgba(0,0,0,0.06);
-    ">
-      <h1 style="margin:0; font-size:24px; letter-spacing:0.5px;">
-        THP Gossip News
-      </h1>
-      <p style="margin:4px 0 0 0; font-size:11px; color:#666;">
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet">
+
+    <!-- Styles custom -->
+    <style>
+      /* Bouton fantôme "Nouveau potin" */
+      .btn-ghost-potin {
+        background-color: transparent;
+        border: 2px solid #ffffff;
+        color: #ffffff;
+        border-radius: 999px;
+        padding: 0.4rem 1.8rem;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease,
+          box-shadow 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .btn-ghost-potin:hover {
+        background-color: rgba(255, 255, 255, 0.16);
+        color: #ffffff;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        transform: translateY(-1px);
+      }
+    </style>
+  </head>
+
+  <!-- fond global gris pour éviter les zones blanches autour -->
+  <body style="background:#dedede; margin:0;">
+
+    <!-- HEADER : bande grise -->
+    <header class="text-center py-5"
+            style="background:#dedede; width:100%;">
+      <h1 class="fw-bold mb-2"> THP Gossip News</h1>
+      <p class="text-muted mb-0">
         Les rumeurs les plus inutiles, mais clairement les plus importantes.
       </p>
     </header>
 
-    <!-- ZONE IMAGE + BOUTON + CARTES -->
+    <!-- SECTION AVEC IMAGE DE FOND + léger assombrissement -->
     <div style="
-      background:url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1800') center/cover no-repeat;
-      min-height: calc(100vh - 180px);
-      padding:40px 0 90px 0;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      box-sizing:border-box;
+      background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-color: rgba(0,0,0,0.18);     /* assombrit un peu l'image */
+      background-blend-mode: multiply;        /* mélange couleur + image */
+      padding: 40px 0;
+      min-height: 70vh;
     ">
 
-      <!-- BOUTON NOUVEAU POTIN — VERSION TRANSPARENTE -->
-      <a href="/gossips/new/" style="
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        gap:8px;
-        padding:10px 26px;
-        border-radius:999px;
-        border:1px solid #ffffff;
-        background:rgba(255,255,255,0.15);
-        backdrop-filter:blur(4px);
-        color:#ffffff;
-        font-size:15px;
-        text-decoration:none;
-        box-shadow:0 6px 16px rgba(0,0,0,0.28);
-        margin-bottom:28px;
-      ">
-          Nouveau potin
-      </a>
+      <div class="container" style="max-width: 800px;">
 
-      <!-- CONTENEUR DES POTINS -->
-      <div style="width:80%; max-width:1000px;">
+        <!-- BOUTON NOUVEAU POTIN -->
+        <div class="text-center mb-4">
+          <a href="/gossips/new/"
+             class="btn btn-lg btn-ghost-potin px-4">
+            Nouveau potin
+          </a>
+        </div>
 
-        <% if gossips && !gossips.empty? %>
-          <% gossips.each_with_index do |gossip, index| %>
-            <div style="
-              background:#ffffff;
-              border-radius:14px;
-              box-shadow:0 6px 18px rgba(0,0,0,0.25);
-              padding:18px 24px;
-              margin-bottom:20px;
-            ">
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="
-                  font-size:11px;
-                  background:#00a2ff;
-                  color:#fff;
-                  padding:3px 10px;
-                  border-radius:20px;
-                  text-transform:uppercase;
-                ">
-                  Potin #<%= index + 1 %>
-                </span>
+        <!-- LISTE DES POTINS -->
+        <% if gossips.empty? %>
 
-                <a href="/gossips/<%= index + 1 %>" style="
-                  display:inline-block;
-                  padding:8px 18px;
-                  font-size:13px;
-                  border-radius:999px;
-                  border:1px solid #ddd;
-                  text-decoration:none;
-                  color:#444;
-                  background:rgba(255,255,255,0.9);
-                  box-shadow:0 4px 10px rgba(0,0,0,0.08);
-              ">
-                  Voir le potin →
-                </a>
-              </div>
-
-              <h3 style="margin-top:12px; margin-bottom:6px; font-size:18px; color:#111;">
-                <%= gossip.author %>
-              </h3>
-
-              <p style="margin:0; font-size:14px; color:#444; line-height:1.5;">
-                <%= gossip.content %>
-              </p>
-            </div>
-          <% end %>
-        <% else %>
-          <div style="
-            background:#ffffff;
-            border-radius:14px;
-            box-shadow:0 6px 18px rgba(0,0,0,0.25);
-            padding:22px 26px;
-            text-align:center;
-            font-size:14px;
-          ">
-            Aucun potin pour le moment. Va balancer un peu 😈
+          <!-- message "aucun potin" : même style que card -->
+          <div class="alert alert-light text-center"
+               style="background:#ffffff; border-radius:20px;">
+            Aucun potin pour le moment.<br>
+            <strong>Tout le monde est trop sage…</strong>
           </div>
+
+        <% else %>
+
+          <% gossips.each_with_index do |gossip, index| %>
+
+            <!-- CARD POTIN : BLANCHE -->
+            <div class="card shadow-sm mb-4 border-0"
+                 style="border-radius:20px; background-color:#ffffff;">
+
+              <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <div>
+                    <span class="badge bg-info text-dark mb-1">
+                      Potin #<%= index + 1 %>
+                    </span>
+                    <h5 class="fw-bold mb-0"><%= gossip.author %></h5>
+                  </div>
+
+                  <a href="/gossips/<%= index + 1 %>"
+                     class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                    Voir le potin
+                  </a>
+                </div>
+
+                <p class="mt-2 mb-0" style="font-size:1.05rem;">
+                  <%= gossip.content %>
+                </p>
+
+              </div>
+            </div>
+
+          <% end %>
+
         <% end %>
 
       </div>
     </div>
 
-    <!-- FOOTER -->
-    <footer style="
-      text-align:center;
-      padding:26px 0 40px 0;
-      font-size:12px;
-      background:#f5f5f5;
-    ">
-      Retrouve THP Gossip News sur :
-      <br><br>
+    <!-- FOOTER : même gris que le header -->
+    <footer class="text-center py-4 text-muted"
+            style="background:#dedede; margin:0;">
+      <p class="mb-2">Retrouve THP Gossip News sur :</p>
 
-      <a href="https://www.instagram.com/the_hacking_project/" target="_blank" style="
-        background:#ff5c5c;
-        color:#fff;
-        padding:6px 10px;
-        margin:3px;
-        border-radius:12px;
-        text-decoration:none;
-        font-size:12px;
-      ">
-        📸 Instagram
-      </a>
+      <div class="d-flex justify-content-center gap-3 flex-wrap mt-2">
 
-      <a href="https://www.linkedin.com/school/the-hacking-project/" target="_blank" style="
-        background:#0a66c2;
-        color:#fff;
-        padding:6px 10px;
-        margin:3px;
-        border-radius:12px;
-        text-decoration:none;
-        font-size:12px;
-      ">
-        💼 LinkedIn
-      </a>
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/the_hacking_project"
+           target="_blank"
+           class="btn btn-sm text-white rounded-pill px-3"
+           style="background: radial-gradient(circle at 30% 30%, #fdf497 0, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); border:none;">
+          <i class="bi bi-instagram me-1"></i>
+          Instagram
+        </a>
 
-      <a href="https://www.thehackingproject.org" target="_blank" style="
-        background:#333;
-        color:#fff;
-        padding:6px 10px;
-        margin:3px;
-        border-radius:12px;
-        text-decoration:none;
-        font-size:12px;
-      ">
-        🌐 Site web
-      </a>
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/school/the-hacking-project"
+           target="_blank"
+           class="btn btn-sm text-white rounded-pill px-3"
+           style="background-color:#0A66C2; border:none;">
+          <i class="bi bi-linkedin me-1"></i>
+          LinkedIn
+        </a>
+
+        <!-- Site officiel -->
+        <a href="https://www.thehackingproject.org"
+           target="_blank"
+           class="btn btn-sm text-white rounded-pill px-3"
+           style="background-color:#444; border:none;">
+          <i class="bi bi-globe me-1"></i>
+          Site web
+        </a>
+
+      </div>
     </footer>
 
   </body>
