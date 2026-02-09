@@ -1,8 +1,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>THP Gossip News – Modifier le potin n°<%= id %></title>
-
+    <title>Modifier le potin <%= id %></title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet">
@@ -11,57 +10,40 @@
   <body class="bg-light">
     <div class="container py-5" style="max-width: 800px;">
 
-      <header class="mb-4 d-flex justify-content-between align-items-center">
-        <a href="/gossips/<%= id %>" class="text-decoration-none text-muted small">
-          ◀️ Retour au potin
-        </a>
-        <span class="text-muted small">THP Gossip News – Édition</span>
-      </header>
+      <h1 class="mb-4 text-center">Modifier le potin #<%= id %></h1>
 
-      <h1 class="fw-bold mb-3">✏️ Modifier le potin n°<%= id %></h1>
-      <p class="text-muted mb-4">
-        Ajuste les détails, réécris l’histoire… ou corrige juste une faute.
-      </p>
-
-      <% if gossip %>
-        <div class="card shadow-sm border-0" style="border-radius: 20px;">
-          <div class="card-body">
-            <form action="/gossips/<%= id %>/edit/" method="POST">
-
-              <div class="mb-3">
-                <label class="form-label">Auteur</label>
-                <input
-                  type="text"
-                  name="gossip_author"
-                  class="form-control"
-                  value="<%= gossip.author %>">
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label">Potin</label>
-                <input
-                  type="text"
-                  name="gossip_content"
-                  class="form-control"
-                  value="<%= gossip.content %>">
-              </div>
-
-              <button type="submit" class="btn btn-primary">
-                ✅ Mettre à jour sur THP Gossip News
-              </button>
-              <a href="/gossips/<%= id %>" class="btn btn-outline-secondary ms-2">
-                Annuler
-              </a>
-
-            </form>
-          </div>
+      <form action="/gossips/<%= id %>/edit/" method="post" class="card shadow-sm p-4">
+        <div class="mb-3">
+          <label for="author" class="form-label">Auteur</label>
+          <input
+            type="text"
+            name="gossip_author"
+            id="author"
+            class="form-control"
+            value="<%= gossip.author %>"
+            required>
         </div>
-      <% else %>
-        <div class="alert alert-danger">
-          Impossible de modifier ce potin : il n’existe plus.
+
+        <div class="mb-3">
+          <label for="content" class="form-label">Contenu</label>
+          <textarea
+            name="gossip_content"
+            id="content"
+            class="form-control"
+            rows="4"
+            required><%= gossip.content %></textarea>
         </div>
-        <a href="/" class="btn btn-secondary">Retour à THP Gossip News</a>
-      <% end %>
+
+        <div class="d-flex justify-content-between">
+          <a href="/gossips/<%= id %>" class="btn btn-secondary">
+            Annuler
+          </a>
+
+          <button type="submit" class="btn btn-primary">
+            Sauvegarder les modifications
+          </button>
+        </div>
+      </form>
 
     </div>
   </body>

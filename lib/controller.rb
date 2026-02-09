@@ -1,74 +1,57 @@
-# controller.rb
-require 'sinatra'
-require 'csv'
+require 'sinatra/base'
 require_relative 'gossip'
 
 class ApplicationController < Sinatra::Base
-  set :root, File.dirname(__FILE__)
-
-  # Pour afficher correctement les fichiers ERB
-  set :views, Proc.new { File.join(root, "views") }
-
-  ####################################
-  # 👉 PAGE D’ACCUEIL = LISTE DES POTINS
-  ####################################
+  # Page d'accueil : liste des potins
   get '/' do
     gossips = Gossip.all
     erb :index, locals: { gossips: gossips }
   end
 
-  ####################################
-  # 👉 PAGE NEW POTIN
-  ####################################
-  get '/gossips/new' do
+  # Nouveau potin : formulaire
+  get '/gossips/new/' do
     erb :new_gossip
   end
 
-  ####################################
-  # 👉 TRAITEMENT FORMULAIRE NEW POTIN
-  ####################################
-  post '/gossips/new' do
-    Gossip.new(params[:gossip_author], params[:gossip_content]).save
+  # Nouveau potin : traitement du formulaire
+  post '/gossips/new/' do
+    Gossip.new(params['gossip_author'], params['gossip_content']).save
     redirect '/'
   end
 
-  ####################################
-  # 👉 PAGE D’UN POTIN (AVEC OU SANS / FINAL)
-  ####################################
+  # Afficher un potin
   get '/gossips/:id' do
-    id = params[:id].to_i
+    id = params['id'].to_i
     gossip = Gossip.find(id)
+
+    halt 404, "Gossip not found" unless gossip
+
     erb :show, locals: { gossip: gossip, id: id }
   end
 
-  # Si quelqu’un met un slash inutile → on redirige proprement
-  get '/gossips/:id/' do
-    redirect "/gossips/#{params[:id]}"
-  end
-
-  ####################################
-  # 👉 PAGE POUR EDITER UN POTIN
-  ####################################
-  get '/gossips/:id/edit' do
-    id = params[:id].to_i
+  # Formulaire d'édition d'un potin
+  get '/gossips/:id/edit/' do
+    id = params['id'].to_i
     gossip = Gossip.find(id)
+
+    halt 404, "Gossip not found" unless gossip
+
     erb :edit, locals: { gossip: gossip, id: id }
   end
 
-  ####################################
-  # 👉 TRAITEMENT EDIT
-  ####################################
-  post '/gossips/:id/edit' do
-    Gossip.update(params[:id].to_i, params[:gossip_author], params[:gossip_content])
-    redirect "/gossips/#{params[:id]}"
+  # Traitement du formulaire d'édition
+  post '/gossips/:id/edit/' do
+    id = params['id'].to_i
+    Gossip.update(id, params['gossip_author'], params['gossip_content'])
+    redirect "/gossips/#{id}"
   end
 
-  ####################################
-  # 👉 SUPPRESSION D'UN POTIN
-  ####################################
-  post '/gossips/:id/delete' do
-    Gossip.delete(params[:id].to_i)
+  # (optionnel) suppression si tu l'as dans ton exo
+  post '/gossips/:id/delete/' do
+    id = params['id'].to_i
+    Gossip.delete(id) if Gossip.respond_to?(:delete)
     redirect '/'
   end
 
+  run! if app_file == $0
 end
