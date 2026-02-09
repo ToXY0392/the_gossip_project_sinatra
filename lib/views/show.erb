@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>THP Gossip News – Potin</title>
+    <title>THP Gossip News – Potin <%= id %></title>
 
     <!-- Bootstrap -->
     <link
@@ -15,117 +15,145 @@
 
     <style>
       body {
-        background: #dedede;
         margin: 0;
+        background: #dedede;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
-      .card-gossip {
-        border-radius: 20px;
+      header {
+        background:#dedede;
+      }
+
+      /* card style “verre dépoli” comme sur l’index */
+      .gossip-card {
+        background: rgba(255,255,255,0.13);
+        border-radius: 24px;
+        border: 1px solid rgba(0,0,0,0.08);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        padding: 26px 30px;
+        box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+        color: #222;
+        transition:
+          transform .2s ease,
+          box-shadow .2s ease,
+          background-color .2s ease;
+      }
+
+      .gossip-card:hover {
+        transform: scale(1.01);
+        background: rgba(255,255,255,0.20);
+        box-shadow: 0 18px 48px rgba(0,0,0,0.6);
+      }
+
+      .gossip-label {
+        font-weight: 600;
+      }
+
+      .btn-soft {
+        border-radius: 999px;
+        padding: 8px 20px;
+      }
+
+      .btn-soft-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+        color: #222;
+      }
+      .btn-soft-warning:hover {
+        background-color: #ffcd39;
+        border-color: #ffcd39;
+        color: #222;
+      }
+
+      .btn-soft-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: #fff;
+      }
+      .btn-soft-secondary:hover {
+        background-color: #7e8a93;
+        border-color: #7e8a93;
+        color: #fff;
+      }
+
+      .btn-soft-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: #fff;
+      }
+      .btn-soft-danger:hover {
+        background-color: #e55362;
+        border-color: #e55362;
+        color: #fff;
+      }
+
+      footer {
+        background:#dedede;
       }
     </style>
   </head>
 
   <body>
+
     <!-- HEADER -->
-    <header class="text-center py-4" style="background:#dedede; width:100%;">
-      <div class="text-muted small mb-1">THP Gossip News</div>
+    <header class="text-center py-4">
       <h1 class="fw-bold mb-1">Potin #<%= id %></h1>
+      <p class="text-muted mb-0">Détails du potin</p>
     </header>
 
-    <!-- SECTION AVEC FOND -->
-    <div style="
-      background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      background-color: rgba(0,0,0,0.20);
-      background-blend-mode: multiply;
-      padding: 60px 0 80px 0;
-      min-height: 70vh;
-    ">
-      <div class="container d-flex justify-content-center">
-        <!-- CARD POTIN -->
-        <div class="card shadow-sm border-0 card-gossip w-100" style="max-width: 800px; background:#ffffff;">
-          <div class="card-body">
+    <!-- CONTENU -->
+    <main class="py-4">
+      <div class="container" style="max-width: 900px;">
 
-            <!-- Auteur + contenu -->
-            <p class="mb-2">
-              <strong>Auteur :</strong>
-              <span class="ms-1"><%= gossip.author %></span>
-            </p>
+        <div class="gossip-card mb-4">
+          <p class="mb-2">
+            <span class="gossip-label">Auteur :</span>
+            <span><%= gossip.author %></span>
+          </p>
 
-            <p class="mb-4">
-              <strong>Contenu :</strong><br>
-              <span><%= gossip.content %></span>
-            </p>
+          <p class="mb-3">
+            <span class="gossip-label">Contenu :</span><br>
+            <span><%= gossip.content %></span>
+          </p>
 
-            <!-- Ligne de boutons -->
-            <div class="d-flex justify-content-end align-items-center pt-3 border-top">
+          <!-- Boutons d’action -->
+          <div class="d-flex flex-wrap gap-2 mt-3">
 
-              <!-- Retour à la liste -->
-              <a href="/" class="btn btn-outline-secondary rounded-pill px-3 me-2">
-                <i class="bi bi-arrow-left me-1"></i>
-                Retour à la liste
-              </a>
+            <!-- Modifier -->
+            <a href="/gossips/<%= id %>/edit/"
+               class="btn btn-soft btn-soft-warning">
+              <i class="bi bi-pencil-square me-1"></i>
+              Modifier ce potin
+            </a>
 
-              <!-- Modifier ce potin -->
-              <a href="/gossips/<%= id %>/edit/"
-                class="btn btn-primary rounded-pill px-3 me-2">
-                <i class="bi bi-pencil-square me-1"></i>
-                Modifier ce potin
-              </a>
+            <!-- Retour à la liste -->
+            <a href="/"
+               class="btn btn-soft btn-soft-secondary">
+              <i class="bi bi-arrow-left me-1"></i>
+              Retour à la liste
+            </a>
 
-              <!-- Supprimer (formulaire POST) -->
-              <form action="/gossips/<%= id %>/delete/" method="post" class="m-0">
-                <button type="submit"
-                        class="btn btn-outline-danger rounded-pill px-3"
-                        onclick="return confirm('Supprimer ce potin ?');">
-                  <i class="bi bi-trash me-1"></i>
-                  Supprimer
-                </button>
-              </form>
+            <!-- Supprimer -->
+            <form action="/gossips/<%= id %>/delete/" method="post" class="ms-auto">
+              <button type="submit"
+                      class="btn btn-soft btn-soft-danger"
+                      onclick="return confirm('Tu es sûr de vouloir supprimer ce potin ?');">
+                <i class="bi bi-trash3 me-1"></i>
+                Supprimer
+              </button>
+            </form>
 
-            </div>
           </div>
         </div>
+
       </div>
-    </div>
+    </main>
 
     <!-- FOOTER -->
-    <footer class="text-center py-4 text-muted" style="background:#dedede; margin:0;">
-      <p class="mb-2">Retrouve THP Gossip News sur :</p>
-
-      <div class="d-flex justify-content-center gap-3 flex-wrap mt-2">
-
-        <!-- Instagram -->
-        <a href="https://www.instagram.com/the_hacking_project"
-          target="_blank"
-          class="btn btn-sm text-white rounded-pill px-3"
-          style="background: radial-gradient(circle at 30% 30%, #fdf497 0, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); border:none;">
-          <i class="bi bi-instagram me-1"></i>
-          Instagram
-        </a>
-
-        <!-- LinkedIn -->
-        <a href="https://www.linkedin.com/school/the-hacking-project"
-          target="_blank"
-          class="btn btn-sm text-white rounded-pill px-3"
-          style="background-color:#0A66C2; border:none;">
-          <i class="bi bi-linkedin me-1"></i>
-          LinkedIn
-        </a>
-
-        <!-- Site officiel -->
-        <a href="https://www.thehackingproject.org"
-          target="_blank"
-          class="btn btn-sm text-white rounded-pill px-3"
-          style="background-color:#444; border:none;">
-          <i class="bi bi-globe me-1"></i>
-          Site web
-        </a>
-
-      </div>
+    <footer class="text-center py-3 text-muted">
+      <small>THP Gossip News – Sinatra project</small>
     </footer>
+
   </body>
 </html>
